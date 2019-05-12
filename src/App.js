@@ -5,6 +5,9 @@ import '@vkontakte/vkui/dist/vkui.css';
 
 import Home from './panels/Home';
 import Persik from './panels/Persik';
+import List from './panels/List';
+import firebase from './Firebase';
+import Menu from './panels/Menu';
 
 class App extends React.Component {
 	constructor(props) {
@@ -13,7 +16,8 @@ class App extends React.Component {
 		this.state = {
 			activePanel: 'home',
 			fetchedUser: null,
-		};
+			cards: []
+		};		
 	}
 
 	componentDidMount() {
@@ -27,6 +31,25 @@ class App extends React.Component {
 			}
 		});
 		connect.send('VKWebAppGetUserInfo', {});
+
+		// firebase
+		const sportEventRef = firebase.database().ref().child('cards');
+		
+		sportEventRef.on('value', snapshot => {
+			let cards = snapshot.val();
+			console.log(cards);
+			let newState = [];
+			for (let card in cards) {
+				newState.push({
+					id: card,
+					title: cards[card].title,
+					description: cards[card].description
+				});
+			}
+			this.setState({
+				cards: newState
+			});
+		})
 	}
 
 	go = (e) => {
@@ -34,10 +57,13 @@ class App extends React.Component {
 	};
 
 	render() {
+		console.log(this.state.cards)
 		return (
 			<View activePanel={this.state.activePanel}>
 				<Home id="home" fetchedUser={this.state.fetchedUser} go={this.go} />
 				<Persik id="persik" go={this.go} />
+				<List id="list" cards={this.state.cards} go={this.go} />
+				<Menu id="menu" go={this.go} user={this.state.fetchedUser} />
 			</View>
 		);
 	}

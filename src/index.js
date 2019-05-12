@@ -4,6 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import connect from '@vkontakte/vkui-connect';
 import App from './App';
+
+import Menu from './panels/Menu';
 // import registerServiceWorker from './sw';
 
 // Init VK App
@@ -15,4 +17,4 @@ connect.send('VKWebAppInit', {});
 // Подробнее про сервис воркеры можно почитать тут — https://vk.cc/8MHpmT 
 // registerServiceWorker();
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Menu />, document.getElementById('root'));
