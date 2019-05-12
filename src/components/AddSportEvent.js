@@ -5,17 +5,13 @@ import firebase from '../Firebase';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';   
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 
+import { Levels } from '..//data/levels';
+
 import moment from 'moment'
 import 'moment/locale/ru'
 moment.locale('ru')
 
 const osname = platform();
-
-const levels = [
-  'Лайт',
-  'Лайт+',
-  'Медиум'
-]
 
 const durations = [
   '00:30',
@@ -142,7 +138,7 @@ class Add extends React.Component {
     )   
     
     createCheckboxes = () => (
-      levels.map(this.createCheckbox)
+      Levels.map(this.createCheckbox)
     )     
 
     onChange = (e) => {

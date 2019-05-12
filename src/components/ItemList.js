@@ -4,7 +4,7 @@ import {View, Panel, PanelHeader, HeaderButton, platform, IOS, Group, Root, Cell
 import Icon24Add from '@vkontakte/icons/dist/24/add';    
 
 import Item from './Item';
-import Add from '../panels/Add';
+import Add from './AddSportEvent';
 import Detail from './Detail';
 import Edit from './Edit';
 

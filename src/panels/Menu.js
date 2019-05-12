@@ -13,8 +13,6 @@ import firebase from './../Firebase';
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 
 import List from '../components/ItemList';
-import Add from './Add';
-//import Profile from './Profile';
 import Profile from '../components/Profile';
 import Detail from './Detail';
 
