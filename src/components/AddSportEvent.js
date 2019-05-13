@@ -20,7 +20,7 @@ class Add extends React.Component {
       super(props);
   
       this.state = {
-        kindSport: '',
+        kindSport: null,
         city: 'Уфа',
         fullAddress: '',
         when: '',
@@ -30,7 +30,6 @@ class Add extends React.Component {
         levels: [],
         price: 0,
         description: '',
-        
         avatar: ''
       }
 
@@ -94,6 +93,13 @@ class Add extends React.Component {
       this.setState(state);
     }
 
+    onKindSportChange = (e) => {
+      const state = this.state
+      const sport = sports[e.target.value];
+      state[e.target.name] = sport;
+      this.setState(state);
+    }    
+
     onSubmit = (e) => {
       e.preventDefault();
   
@@ -119,7 +125,7 @@ class Add extends React.Component {
 
       var updates = {};
       updates["/cards/" + newPostKey] = {
-        kindSport: kindSport,
+        kindSport: kindSport.name,
         city: city,
         fullAddress: fullAddress,
         startDateTime: startdate1,
@@ -130,7 +136,7 @@ class Add extends React.Component {
         description: description,
         
         user: this.props.user,
-        avatar: avatar
+        avatar: kindSport.avatars[0]
       };
 
       firebase
@@ -158,10 +164,10 @@ class Add extends React.Component {
                 placeholder="Не выбрано"
                 status={kindSport ? 'valid' : 'error'}
                 bottom={kindSport ? '' : 'Пожалуйста, укажите вид спорта'}
-                onChange={this.onChange}
+                onChange={this.onKindSportChange}
                 name="kindSport">
                 {sports.map((sport, index) =>
-                  <option key={index} value={sport.name}>{sport.name}</option>
+                  <option key={index} value={index}>{sport.name}</option>
                 )}
               </Select>    
 

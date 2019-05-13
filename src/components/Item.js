@@ -28,6 +28,7 @@ export default class Item extends React.Component {
                 }                
                 before={<Avatar src={ imageName } size={80}/>}
                 size="l"
+                asideContent={moment.utc(startDateTime).format('HH:mm')}                
               >
                 {fullAddress}
               </Cell>
