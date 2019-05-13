@@ -1,4 +1,4 @@
-export const Levels = [
+export const levels = [
     'Новички',
     'Любители',
     'Профессионалы'

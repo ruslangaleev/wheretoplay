@@ -14,21 +14,19 @@ export default class Item extends React.Component {
     }
 
     render() {
-        const { id, title, description, startDateTime, endDateTime, duration, price, fullAddress, userId, levels, limit, players } = this.props.item;
-
+        const { id, kindSport, description, startDateTime, endDateTime, duration, price, fullAddress, userId, levels, limit, players, avatar } = this.props.item;
+        var imageName = require('../images/' + avatar)
         return(
             <Group title={moment(startDateTime).format('Do MMM, dddd')}>
               <Cell
                 photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                description="Волейбол"
+                description={kindSport}
                 bottomContent={
                   <div style={{ display: 'flex' }}>
                     <Button size="m" onClick={this.props.go}>Подробнее</Button>
                   </div>
                 }                
-                before={<Avatar size={80}>
-                    <div style={{ color: 'black' }}>{moment.utc(startDateTime).format('HH:mm')}</div>
-                  </Avatar>}
+                before={<Avatar src={ imageName } size={80}/>}
                 size="l"
               >
                 {fullAddress}

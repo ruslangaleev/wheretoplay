@@ -1,11 +1,13 @@
 import React from 'react';
-import {Panel, PanelHeader, View, Input, Select, FormLayoutGroup, FormLayout, Radio, Textarea,
-    Checkbox, Link, Button, Group, Cell, List, Slider, platform, IOS, HeaderButton} from '@vkontakte/vkui';
+import { Panel, PanelHeader, View, Input, Select, FormLayout, Textarea, Button, Group, Cell, List, platform, IOS, HeaderButton} from '@vkontakte/vkui';
 import firebase from '../Firebase'; 
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';   
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 
-import { Levels } from '..//data/levels';
+import { levels } from '../data/Levels';
+import { times } from '../data/Times';
+import { sports } from '../data/Sports';
+import { cities } from '../data/Cities';
 
 import moment from 'moment'
 import 'moment/locale/ru'
@@ -13,77 +15,22 @@ moment.locale('ru')
 
 const osname = platform();
 
-const durations = [
-  '00:30',
-  '01:00',
-  '01:30',
-  '02:00',
-  '02:30',
-  '03:00',
-  '03:30',
-  '04:00',
-  '04:30',
-  '05:00',
-
-  '05:30',
-  '06:00',
-  '06:30',
-  '07:00',
-  '07:30',
-  '08:00',
-  '08:30',
-  '09:00',
-  '09:30',
-  '10:00',
-
-  '10:30',
-  '11:00',
-  '11:30',
-  '12:00',
-  '12:30',
-  '13:00',
-  '13:30',
-  '14:00',
-  '14:30',
-  '15:00',
-
-  '15:30',
-  '16:00',
-  '16:30',
-  '17:00',
-  '17:30',
-  '18:00',
-  '18:30',
-  '19:00',
-  '19:30',
-  '20:00',
-  '20:30',
-  '21:00',
-  '21:30',
-  '22:00',
-  '22:30',
-  '23:00',
-  '23:30'
-]
-
 class Add extends React.Component {
     constructor(props) {
       super(props);
   
       this.state = {
-        title: '',
-        description: '',
+        kindSport: '',
+        city: 'Уфа',
+        fullAddress: '',
         when: '',
         whatTime: '',
         duration: '',
-        levels: [],
-        fullAddress: '',
         limit: 0,
+        levels: [],
         price: 0,
-        city: '',
-        kindSport: '',
-        user: null,
-        players: [],
+        description: '',
+        
         avatar: ''
       }
 
@@ -138,7 +85,7 @@ class Add extends React.Component {
     )   
     
     createCheckboxes = () => (
-      Levels.map(this.createCheckbox)
+      levels.map(this.createCheckbox)
     )     
 
     onChange = (e) => {
@@ -150,8 +97,14 @@ class Add extends React.Component {
     onSubmit = (e) => {
       e.preventDefault();
   
-      const { title, description, when, whatTime, duration, price, fullAddress, levels, city, 
-              limit, kindSport, avatar } = this.state;
+      const { kindSport, city, fullAddress, when, whatTime, duration, limit, levels, price, description, 
+              avatar } = this.state;
+
+      if (kindSport == '' || city == '' || fullAddress == '' || when == '' || whatTime == '')
+      {
+        return;
+      }
+
       let date2 = when + " " + whatTime + ":00";
       let startdate1 = moment.utc(date2).format();
 
@@ -166,17 +119,16 @@ class Add extends React.Component {
 
       var updates = {};
       updates["/cards/" + newPostKey] = {
-        title: title,
-        description: description,
+        kindSport: kindSport,
+        city: city,
+        fullAddress: fullAddress,
         startDateTime: startdate1,
         endDateTime: date3,
+        limit: limit,
         levels: Array.from(this.selectedCheckboxes),
         price: price,
-        fullAddress: fullAddress,
-        city: city,
-        players: [],
-        limit: limit,
-        kindSport: kindSport,
+        description: description,
+        
         user: this.props.user,
         avatar: avatar
       };
@@ -190,8 +142,7 @@ class Add extends React.Component {
     }    
   
     render() {
-      const { email, purpose } = this.state;
-  
+      const { kindSport, fullAddress, when, whatTime, duration } = this.state;  
       return (
         <View activePanel={this.props.id}>
           <Panel id={this.props.id} theme="white">
@@ -200,33 +151,78 @@ class Add extends React.Component {
               left={<HeaderButton onClick={this.props.go}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
               addon={<HeaderButton onClick={this.props.go}>Назад</HeaderButton>}
             >
-            Новое событие</PanelHeader>
-            <FormLayout onSubmit={this.onSubmit}>  
-              <Input top="Заголовок" name="title" onChange={this.onChange} value={this.state.value} />
-              <Textarea top="Описание" name="description" onChange={this.onChange} />
+            Новое мероприятие</PanelHeader>
+            <FormLayout onSubmit={this.onSubmit}>
+              <Select 
+                top="Вид спорта" 
+                placeholder="Не выбрано"
+                status={kindSport ? 'valid' : 'error'}
+                bottom={kindSport ? '' : 'Пожалуйста, укажите вид спорта'}
+                onChange={this.onChange}
+                name="kindSport">
+                {sports.map((sport, index) =>
+                  <option key={index} value={sport.name}>{sport.name}</option>
+                )}
+              </Select>    
 
-              <Input top="Адрес" name="fullAddress" onChange={this.onChange} value={this.state.value} />
-              {/* <FormLayoutGroup top="Видимость мероприятия">
-                <Radio name="type" defaultChecked>Виден для всех</Radio>
-              </FormLayoutGroup> */}
-  
-              <Select top="Дата" placeholder="Не выбрано" onChange={this.onChange} name="when">
+              <Select top="Город" name="city" value="Уфа">
+                {cities.map((city, index) =>
+                  <option key={index} value={city}>{city}</option>
+                )}
+              </Select>                            
+
+              <Input 
+                top="Адрес" 
+                placeholder="Введите улицу, номер здания..."
+                status={fullAddress ? 'valid' : 'error'}
+                bottom={fullAddress ? '' : 'Пожалуйста, укажите адрес'}
+                name="fullAddress" 
+                onChange={this.onChange} 
+                value={this.state.value} 
+              />
+
+              <Select 
+                top="Дата" 
+                placeholder="Не выбрано" 
+                status={when ? 'valid' : 'error'}
+                bottom={when ? '' : 'Пожалуйста, выберите дату'}
+                onChange={this.onChange} 
+                name="when">
                 {this.dateList.map((date, index) =>
                   <option key={index} value={date.value}>{date.display}</option>
                 )}
-              </Select>           
+              </Select>                   
 
-              <Select top="Время" placeholder="Не выбрано" onChange={this.onChange} name="whatTime">
-                {durations.map((duration, index) =>
-                  <option key={index} value={duration}>{duration}</option>
+              <Select 
+                top="Время" 
+                placeholder="Не выбрано" 
+                status={whatTime ? 'valid' : 'error'}
+                bottom={whatTime ? '' : 'Пожалуйста, выберите время'}                
+                onChange={this.onChange} 
+                name="whatTime">
+                {times.map((time, index) =>
+                  <option key={index} value={time}>{time}</option>
                 )}
               </Select>  
 
-              <Select top="Продолжительность" placeholder="Не выбрано" onChange={this.onChange} name="duration">
-                {durations.map((duration, index) =>
+              <Select 
+                top="Продолжительность" 
+                placeholder="Не выбрано" 
+                status={duration ? 'valid' : 'error'}
+                bottom={duration ? '' : 'Пожалуйста, выберите продолжительность'}                
+                onChange={this.onChange} 
+                name="duration">
+                {times.map((duration, index) =>
                   <option key={index} value={duration}>{duration}</option>
                 )}
-              </Select>                  
+              </Select>
+
+              <Input top="Лимит игроков" 
+                placeholder="Неограничено"
+                name="fullAddress" 
+                onChange={this.onChange} 
+                value={this.state.limit} 
+              />                              
 
               <Group title="Уровень" name="levels" onChange={this.onChange}>
                 <List>
@@ -234,25 +230,10 @@ class Add extends React.Component {
                 </List>
               </Group>
 
-              <Input top="Цена" name="price" onChange={this.onChange} value={this.state.value} />
+              <Input top="Цена" name="price" onChange={this.onChange} value={this.state.price}/>              
 
-              {/* <Input top="Тренер" name="trainer" onChange={this.onChange} value={this.state.value} /> */}
-  
-              {/* <Select
-                top="Цель поездки"
-                placeholder="Выберите цель поездки"
-                status={purpose ? 'valid' : 'error'}
-                bottom={purpose ? '' : 'Пожалуйста, укажите цель поездки'}
-                onChange={this.onChange}
-                value={purpose}
-                name="purpose"
-              >
-                <option value="0">Бизнес или работа</option>
-                <option value="1">Индивидуальный туризм</option>
-                <option value="2">Посещение близких родственников</option>
-              </Select> */}
-              
-              {/* <Checkbox>Согласен со всем <Link>этим</Link></Checkbox> */}
+              <Textarea top="Комментарий" name="description" onChange={this.onChange} />
+
               <Button size="xl">Опубликовать</Button>
             </FormLayout>
           </Panel>
