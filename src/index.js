@@ -3,6 +3,7 @@ import 'core-js/es6/set';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import connect from '@vkontakte/vkui-connect';
+import '@vkontakte/vkui/dist/vkui.css';
 
 import Menu from './panels/Menu';
 // import registerServiceWorker from './sw';
