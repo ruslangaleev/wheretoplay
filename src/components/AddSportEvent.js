@@ -105,7 +105,7 @@ class Add extends React.Component {
   
       const { kindSport, city, fullAddress, when, whatTime, duration, limit, price, description } = this.state;
 
-      if (kindSport === '' || city === '' || fullAddress === '' || when === '' || whatTime === '')
+      if (kindSport === '' || city === '' || fullAddress === '' || when === '' || whatTime === '' || this.selectedCheckboxes.size === 0)
       {
         return;
       }
@@ -229,7 +229,12 @@ class Add extends React.Component {
                 value={this.state.limit} 
               />                              
 
-              <Group title="Уровень" name="levels" onChange={this.onChange}>
+              <Group 
+                title="Уровень" 
+                name="levels" 
+                onChange={this.onChange} 
+                status={this.selectedCheckboxes.size > 0 ? 'valid' : 'error'}
+                bottom={this.selectedCheckboxes.size > 0 ? '' : 'Необходимо указать как минимум 1 уровень'} >
                 <List>
                   {this.createCheckboxes()}
                 </List>

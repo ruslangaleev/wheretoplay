@@ -58,7 +58,6 @@ class Menu extends React.Component {
 			for (let card in cards) {
 				newState.push({
 					id: card,
-					title: cards[card].title,
           description: cards[card].description,
           startDateTime: cards[card].startDateTime,
           endDateTime: cards[card].endDateTime,
