@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Panel, PanelHeader, HeaderButton, platform, IOS, Group, Root, CellButton,
-    List, Cell, Input, InfoRow, Button, FormLayout, Avatar} from '@vkontakte/vkui';
+import {View, Panel, PanelHeader, HeaderButton, platform, IOS, Group,
+    List, Cell, InfoRow, Button, Avatar} from '@vkontakte/vkui';
 import firebase from '../Firebase'; 
 
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';   
@@ -9,10 +9,6 @@ import Icon24Back from '@vkontakte/icons/dist/24/back';
 const osname = platform();
 
 export default class Detail extends React.Component {
-  constructor(props) {
-      super(props); 
-  }
-
   onClick = (e) => {
     e.preventDefault();
     
@@ -56,8 +52,7 @@ export default class Detail extends React.Component {
       user: user,
       levels: levels,
       description: description,
-      players: players,
-      avatar: avatar
+      players: players
     };
 
     firebase
@@ -110,7 +105,7 @@ export default class Detail extends React.Component {
                   }                 
                 </List>
               </Group>
-              { (this.props.user.id == this.props.card.userId) ?
+              { (this.props.user.id === this.props.card.userId) ?
                  <Button size="xl">Редактировать</Button> :
                  <Button size="xl" onClick={this.onClick}>Записаться</Button>}     
         </Panel>

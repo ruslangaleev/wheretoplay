@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, Panel, PanelHeader, HeaderButton, platform, IOS, Group, Root, CellButton,
-    List, Cell, Input, InfoRow} from '@vkontakte/vkui';
+import {View, Panel, PanelHeader, HeaderButton, Root } from '@vkontakte/vkui';
 import Icon24Add from '@vkontakte/icons/dist/24/add';    
 
 import Item from './Item';

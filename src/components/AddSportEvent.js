@@ -103,10 +103,9 @@ class Add extends React.Component {
     onSubmit = (e) => {
       e.preventDefault();
   
-      const { kindSport, city, fullAddress, when, whatTime, duration, limit, levels, price, description, 
-              avatar } = this.state;
+      const { kindSport, city, fullAddress, when, whatTime, duration, limit, price, description } = this.state;
 
-      if (kindSport == '' || city == '' || fullAddress == '' || when == '' || whatTime == '')
+      if (kindSport === '' || city === '' || fullAddress === '' || when === '' || whatTime === '')
       {
         return;
       }

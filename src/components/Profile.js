@@ -1,14 +1,7 @@
 import React from 'react';
-import {View, Panel, PanelHeader, HeaderButton, platform, IOS, Group, Root, CellButton,
-        List, Cell, Input, InfoRow} from '@vkontakte/vkui';
+import { View, Panel, PanelHeader, Group, Root, CellButton } from '@vkontakte/vkui';
 import firebase from './../Firebase';
-import Card from './Detail';
 import Edit from './Edit';
-
-import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';   
-import Icon24Back from '@vkontakte/icons/dist/24/back';
-
-const osname = platform();
 
 export default class Profile extends React.Component {
     constructor(props) {

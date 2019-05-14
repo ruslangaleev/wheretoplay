@@ -1,20 +1,14 @@
 import React from 'react';
-import connect from '@vkontakte/vkui-connect';
+// import connect from '@vkontakte/vkui-connect';
 import VKConnect from '@vkontakte/vkui-connect-mock';
 
-import {Panel, PanelHeader, View, Epic, TabbarItem, Tabbar, Root, HeaderButton} from '@vkontakte/vkui';
+import {Epic, TabbarItem, Tabbar, Root} from '@vkontakte/vkui';
 import Icon28Newsfeed from '@vkontakte/icons/dist/28/newsfeed';
-import Icon28Messages from '@vkontakte/icons/dist/28/messages';
-import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
-import Icon28More from '@vkontakte/icons/dist/28/more';
-import Icon28Search from '@vkontakte/icons/dist/28/search';
 import Icon28User from '@vkontakte/icons/dist/28/user';
 import firebase from './../Firebase';
-import Icon24Add from '@vkontakte/icons/dist/24/add';
 
 import List from '../components/ItemList';
 import Profile from '../components/Profile';
-import Detail from './Detail';
 
 class Menu extends React.Component {
     constructor (props) {
