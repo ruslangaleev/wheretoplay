@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "39667f1f3a3812a65231",
-    "url": "/wheretoplay/static/js/main.39667f1f.chunk.js"
+    "revision": "05ad50f09723954d14d5",
+    "url": "/wheretoplay/static/js/main.05ad50f0.chunk.js"
   },
   {
     "revision": "1a74402c8b228651091b",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/wheretoplay/static/js/2.dd90cbae.chunk.js"
   },
   {
-    "revision": "b98e8522c03b8be56420785882be4ddb",
+    "revision": "c8b1cd7cdceb3edef9f4dae4d14e5f80",
     "url": "/wheretoplay/index.html"
   }
 ];
