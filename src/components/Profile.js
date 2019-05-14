@@ -18,7 +18,7 @@ export default class Profile extends React.Component {
     componentDidMount() {
         this.user = 14624192;
 		const ref = firebase.database().ref().child('cards');
-        ref.orderByChild("userId").equalTo(this.user).on("value", snapshot => {
+        ref.orderByChild("user").equalTo(this.user).on("value", snapshot => {
             let cards = snapshot.val();
             let publishCards = [];
                 for (let card in cards) {
