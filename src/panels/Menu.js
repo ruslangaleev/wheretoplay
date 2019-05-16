@@ -142,7 +142,7 @@ class Menu extends React.Component {
             </Tabbar>
           }>
             <List id="itemList" cards={this.state.cards} user={this.state.fetchedUser} />
-            <Profile id="profile" />
+            <Profile id="profile" user={this.state.fetchedUser} />
           </Epic>
         </Root>
       )
