@@ -160,8 +160,8 @@ export default class Detail extends React.Component {
               <Group title="Список участников">
                 <List>
                   {(this.state.card.players != null) ?
-                      this.state.card.players.map((id) =>
-                        <Cell before={<Avatar src={this.props.user.photo_200} />}>{this.props.user.first_name} {this.props.user.last_name}</Cell>
+                      this.state.card.players.map((player) =>
+                        <Cell before={<Avatar src={this.player.photo} />}>{this.props.user.firstName} {this.props.user.lastName}</Cell>
                       ) :
                       "Нет ни одного записанного игрока"
                   }                 
