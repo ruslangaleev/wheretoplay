@@ -1,5 +1,5 @@
 import React from 'react';
-// import connect from '@vkontakte/vkui-connect';
+import connect from '@vkontakte/vkui-connect';
 import VKConnect from '@vkontakte/vkui-connect-mock';
 
 import {Epic, TabbarItem, Tabbar, Root} from '@vkontakte/vkui';
@@ -37,17 +37,17 @@ class Menu extends React.Component {
       
     VKConnect.send('VKWebAppGetUserInfo', {});
 
-		// connect.subscribe((e) => {
-		// 	switch (e.detail.type) {
-		// 		case 'VKWebAppGetUserInfoResult':
-    //       this.setState({ fetchedUser: e.detail.data });
-    //       this.user = e.detail.data.id;
-		// 			break;
-		// 		default:
-		// 			console.log(e.detail.type);
-		// 	}
-		// });
-    // connect.send('VKWebAppGetUserInfo', {});    
+		connect.subscribe((e) => {
+			switch (e.detail.type) {
+				case 'VKWebAppGetUserInfoResult':
+          this.setState({ fetchedUser: e.detail.data });
+          this.user = e.detail.data.id;
+					break;
+				default:
+					console.log(e.detail.type);
+			}
+		});
+    connect.send('VKWebAppGetUserInfo', {});    
     
 		// firebase
 		const sportEventRef = firebase.database().ref().child('cards');
