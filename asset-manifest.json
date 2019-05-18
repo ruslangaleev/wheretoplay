@@ -1,13 +1,13 @@
 {
-  "main.js": "/wheretoplay/static/js/main.6d06fc7d.chunk.js",
-  "main.js.map": "/wheretoplay/static/js/main.6d06fc7d.chunk.js.map",
+  "main.js": "/wheretoplay/static/js/main.adf50e15.chunk.js",
+  "main.js.map": "/wheretoplay/static/js/main.adf50e15.chunk.js.map",
   "runtime~main.js": "/wheretoplay/static/js/runtime~main.1a74402c.js",
   "runtime~main.js.map": "/wheretoplay/static/js/runtime~main.1a74402c.js.map",
   "static/css/2.891d585b.chunk.css": "/wheretoplay/static/css/2.891d585b.chunk.css",
   "static/js/2.872c612c.chunk.js": "/wheretoplay/static/js/2.872c612c.chunk.js",
   "static/js/2.872c612c.chunk.js.map": "/wheretoplay/static/js/2.872c612c.chunk.js.map",
   "index.html": "/wheretoplay/index.html",
-  "precache-manifest.1bf86b4c64828f0e3c1dda037e4e4ccc.js": "/wheretoplay/precache-manifest.1bf86b4c64828f0e3c1dda037e4e4ccc.js",
+  "precache-manifest.a473fa684568f5616469ca808f51352e.js": "/wheretoplay/precache-manifest.a473fa684568f5616469ca808f51352e.js",
   "service-worker.js": "/wheretoplay/service-worker.js",
   "static/css/2.891d585b.chunk.css.map": "/wheretoplay/static/css/2.891d585b.chunk.css.map"
 }
