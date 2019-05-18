@@ -8,7 +8,6 @@ import Icon24Back from '@vkontakte/icons/dist/24/back';
 
 import moment from 'moment'
 import 'moment/locale/ru'
-import { runInThisContext } from 'vm';
 moment.locale('ru')
 
 const osname = platform();
@@ -75,6 +74,21 @@ export default class Detail extends React.Component {
   }
 
   render() {
+    let button;
+    if (this.state.card.players == null) {
+      button = <Button size="xl" onClick={this.onClick}>Записаться</Button>
+    } else {
+      if (this.state.card.players.filter(t => t.id === this.props.user.id).length > 0) {
+        button = <Button size="xl" onClick={this.onClick}>Отписаться</Button>
+      } else {
+        button = <Button size="xl" onClick={this.onClick}>Записаться</Button>
+      }
+    }
+
+    if (this.state.card.user.id == this.props.user.id) {
+      button = null;
+    }
+
     return (
       <View id="detail" activePanel="detail">
         <Panel id="detail">
@@ -138,6 +152,11 @@ export default class Detail extends React.Component {
                   }                                                     
                 </List>
               </Group>
+              <Group title="Организатор">
+                <List>
+                <Cell before={<Avatar src={this.state.card.user.photo_200} />}>{this.state.card.user.first_name} {this.state.card.user.last_name}</Cell>               
+                </List>
+              </Group>              
               <Group title="Список участников">
                 <List>
                   {(this.state.card.players != null) ?
@@ -148,13 +167,7 @@ export default class Detail extends React.Component {
                   }                 
                 </List>
               </Group>
-              {
-                // (this.props.user.id === this.state.card.user.id)
-                //   ? null :
-                   (this.state.card.players.filter(t => t.id === this.props.user.id).length > 0)
-                    ? <Button size="xl" onClick={this.onClick}>Отписаться</Button>
-                    : <Button size="xl" onClick={this.onClick}>Записаться</Button>
-              }
+              {button}
         </Panel>
       </View>
     );
