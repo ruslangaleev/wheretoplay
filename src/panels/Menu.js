@@ -17,7 +17,6 @@ class Menu extends React.Component {
       this.state = {
         activeStory: 'itemList',
         cards: [],
-        myCards: [],
         fetchedUser: null,
         activePanel: 'itemList',
         activeView: 'main'
@@ -28,26 +27,28 @@ class Menu extends React.Component {
   
 	componentDidMount() {
 
-    VKConnect.subscribe((e) => {
-    if (e.detail.type === 'VKWebAppGetUserInfoResult') { 
-          this.setState({ fetchedUser: e.detail.data });
-          this.user = e.detail.data.id;
-        } 
-    }); 
-      
-    VKConnect.send('VKWebAppGetUserInfo', {});
-
 		connect.subscribe((e) => {
 			switch (e.detail.type) {
 				case 'VKWebAppGetUserInfoResult':
           this.setState({ fetchedUser: e.detail.data });
-          this.user = e.detail.data.id;
+          // this.user = e.detail.data.id;
 					break;
 				default:
 					console.log(e.detail.type);
 			}
 		});
-    connect.send('VKWebAppGetUserInfo', {});    
+    connect.send('VKWebAppGetUserInfo', {});  
+
+    if (this.state.fetchedUser == null)
+    {
+      VKConnect.subscribe((e) => {
+      if (e.detail.type === 'VKWebAppGetUserInfoResult') { 
+            this.setState({ fetchedUser: e.detail.data });
+            // this.user = e.detail.data.id;
+          } 
+      }); 
+      VKConnect.send('VKWebAppGetUserInfo', {});
+    }
     
 		// firebase
 		const sportEventRef = firebase.database().ref().child('cards');
@@ -77,26 +78,26 @@ class Menu extends React.Component {
 			});
     })
     
-    sportEventRef.orderByChild("userId").equalTo(this.user).on("value", snapshot => {
-      let cards = snapshot.val();
-      let newState = [];
-			for (let card in cards) {
-				newState.push({
-					id: card,
-					title: cards[card].title,
-          description: cards[card].description,
-          startDateTime: cards[card].startDateTime,
-          endDateTime: cards[card].endDateTime,
-          price: cards[card].price,
-          fullAddress: cards[card].fullAddress,
-          city: cards[card].city,
-          kindSport: cards[card].kindSport
-				});
-			}
-			this.setState({
-				myCards: newState
-			});
-    });
+    // sportEventRef.orderByChild("userId").equalTo(this.user).on("value", snapshot => {
+    //   let cards = snapshot.val();
+    //   let newState = [];
+		// 	for (let card in cards) {
+		// 		newState.push({
+		// 			id: card,
+		// 			title: cards[card].title,
+    //       description: cards[card].description,
+    //       startDateTime: cards[card].startDateTime,
+    //       endDateTime: cards[card].endDateTime,
+    //       price: cards[card].price,
+    //       fullAddress: cards[card].fullAddress,
+    //       city: cards[card].city,
+    //       kindSport: cards[card].kindSport
+		// 		});
+		// 	}
+		// 	this.setState({
+		// 		myCards: newState
+		// 	});
+    // });
 	}
 
     onStoryChange (e) {

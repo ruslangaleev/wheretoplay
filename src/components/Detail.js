@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Panel, PanelHeader, HeaderButton, platform, IOS, Group,
-    List, Cell, InfoRow, Button, Avatar} from '@vkontakte/vkui';
+    List, Cell, InfoRow, Button, Avatar, FormLayout} from '@vkontakte/vkui';
 import firebase from '../Firebase'; 
 
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';   
@@ -17,7 +17,8 @@ export default class Detail extends React.Component {
     super(props);
 
     this.state = {
-      card: props.card
+      card: props.card,
+      players: props.card.players
     }
   }
 
@@ -25,7 +26,9 @@ export default class Detail extends React.Component {
     e.preventDefault();
     
     let { id, city, fullAddress, kindSport, avatar, startDateTime, endDateTime, price, user, 
-            levels, description, players } = this.state.card;
+            levels, description } = this.state.card;
+
+    let players = this.state.players;
 
     const currentUser = this.props.user;
     if (players == null) {
@@ -70,15 +73,19 @@ export default class Detail extends React.Component {
     firebase
       .database()
       .ref()
-      .update(updates);      
+      .update(updates); 
+      
+    this.setState({
+      players: players
+    })
   }
 
   render() {
     let button;
-    if (this.state.card.players == null) {
+    if (this.state.players == null) {
       button = <Button size="xl" onClick={this.onClick}>Записаться</Button>
     } else {
-      if (this.state.card.players.filter(t => t.id === this.props.user.id).length > 0) {
+      if (this.state.players.filter(t => t.id === this.props.user.id).length > 0) {
         button = <Button size="xl" onClick={this.onClick}>Отписаться</Button>
       } else {
         button = <Button size="xl" onClick={this.onClick}>Записаться</Button>
@@ -98,6 +105,7 @@ export default class Detail extends React.Component {
               addon={<HeaderButton onClick={this.props.goBack}>Назад</HeaderButton>}
             >
             Детали</PanelHeader>
+            <FormLayout>
               <Group title="Информация о мероприятии">
                 <List>
                   <Cell>
@@ -159,15 +167,15 @@ export default class Detail extends React.Component {
               </Group>              
               <Group title="Список участников">
                 <List>
-                  {(this.state.card.players != null) ?
-                      this.state.card.players.map((player) =>
-                        <Cell before={<Avatar src={this.player.photo} />}>{this.props.user.firstName} {this.props.user.lastName}</Cell>
-                      ) :
-                      "Нет ни одного записанного игрока"
+                  {(this.state.players != null) ?
+                      this.state.players.map((player) =>
+                        <Cell before={<Avatar src={player.photo} />}>{player.firstName} {player.lastName}</Cell>
+                      ) : null
                   }                 
                 </List>
               </Group>
               {button}
+            </FormLayout>
         </Panel>
       </View>
     );
