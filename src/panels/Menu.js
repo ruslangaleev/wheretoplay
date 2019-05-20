@@ -10,6 +10,10 @@ import firebase from './../Firebase';
 import List from '../components/ItemList';
 import Profile from '../components/Profile';
 
+import moment from 'moment'
+import 'moment/locale/ru'
+moment.locale('ru')
+
 class Menu extends React.Component {
     constructor (props) {
       super(props);
@@ -51,12 +55,15 @@ class Menu extends React.Component {
     }
     
 		// firebase
-		const sportEventRef = firebase.database().ref().child('cards');
-    
-		sportEventRef.on('value', snapshot => {
+    const sportEventRef = firebase.database().ref().child('cards');
+    console.log("Определение с датой");
+    const currentDate = moment.utc().unix();
+    console.log(moment.utc());
+		sportEventRef.orderByChild('startDateTime').startAt("2019-05-20T22:00:00Z").on('value', snapshot => {
       let cards = snapshot.val();
       let newState = [];
 			for (let card in cards) {
+        console.log(cards[card].startDateTime);
 				newState.push({
 					id: card,
           description: cards[card].description,
