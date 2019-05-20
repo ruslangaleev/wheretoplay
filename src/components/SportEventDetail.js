@@ -12,21 +12,34 @@ moment.locale('ru')
 
 const osname = platform();
 
-export default class Detail extends React.Component {
+export default class SportEventDetail extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       card: props.card,
-      players: props.card.players
+      players: props.card.players,
+      limit: props.card.limit
     }
   }
 
   onClick = (e) => {
     e.preventDefault();
     
-    let { id, city, fullAddress, kindSport, avatar, startDateTime, endDateTime, price, user, 
-            levels, description } = this.state.card;
+    let { id, city, fullAddress, kindSport, avatar, startDateTime, endDateTime, user,
+      levels, description } = this.state.card;
+    let limit = this.state.limit;
+
+    const sportEventRef = firebase.database().ref().child('cards/' + this.state.card.id);
+    
+		sportEventRef.once('value', snapshot => {
+      let card = snapshot.val();
+      if (card.limit == null) {
+        limit = 0;
+      } else {
+        limit = card.limit;
+      }
+    })
 
     let players = this.state.players;
 
@@ -42,13 +55,15 @@ export default class Detail extends React.Component {
     } else {
       let player = players.find(t => t.id === currentUser.id);
       if (player == null) {
-        player = {
-          id: currentUser.id,
-          firstName: currentUser.first_name,
-          lastName: currentUser.last_name,
-          photo: currentUser.photo_200
+        if (limit === 0 || players.length < limit) {
+          player = {
+            id: currentUser.id,
+            firstName: currentUser.first_name,
+            lastName: currentUser.last_name,
+            photo: currentUser.photo_200
+          }
+          players.push(player);
         }
-        players.push(player);
       } else {
         let index = players.indexOf(player)
         players.splice(index, 1)
@@ -63,11 +78,11 @@ export default class Detail extends React.Component {
       avatar: avatar,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
-      price: price,
       user: user,
       levels: levels,
       description: description,
-      players: players
+      players: players,
+      limit: limit
     };
 
     firebase
@@ -82,14 +97,20 @@ export default class Detail extends React.Component {
 
   render() {
     let button;
+
     if (this.state.players == null) {
       button = <Button size="xl" onClick={this.onClick}>Записаться</Button>
     } else {
       if (this.state.players.filter(t => t.id === this.props.user.id).length > 0) {
         button = <Button size="xl" onClick={this.onClick}>Отписаться</Button>
-      } else {
+      } else if (this.state.limit != this.state.players.length) {
         button = <Button size="xl" onClick={this.onClick}>Записаться</Button>
       }
+
+      if (this.state.limit === this.state.players.length &&
+          this.state.players.filter(t => t.id === this.props.user.id).length > 0) {
+        button = <Button size="xl" onClick={this.onClick}>Отписаться</Button>
+      }      
     }
 
     if (this.state.card.user.id == this.props.user.id) {
@@ -141,11 +162,6 @@ export default class Detail extends React.Component {
                   <Cell>
                     <InfoRow title="Уровни игроков">
                       {this.state.card.levels.map((level) => { return level;}).join(', ')}
-                    </InfoRow>                                                                               
-                  </Cell>  
-                  <Cell>
-                    <InfoRow title="Цена">
-                      {this.state.card.price}
                     </InfoRow>                                                                               
                   </Cell>
                   {

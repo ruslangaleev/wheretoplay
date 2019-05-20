@@ -4,8 +4,7 @@ import Icon24Add from '@vkontakte/icons/dist/24/add';
 
 import Item from './Item';
 import Add from './AddSportEvent';
-import Detail from './Detail';
-import Edit from './Edit';
+import SportEventDetail from './SportEventDetail';
 
 export default class ItemList extends React.Component {
     constructor(props) {
@@ -34,8 +33,7 @@ export default class ItemList extends React.Component {
                     </Panel>
                 </View>
                 <Add id="add" user={this.props.user} go={() => this.setState({ activeView: "itemList" })} />
-                <Detail id="detail" user={this.props.user} card={this.state.currentCard} go={() => this.setState({ activeView: "edit" })} goBack={() => this.setState({ activeView: 'itemList' })} />
-                <Edit id="edit" goBack={() => this.setState({ activeView: "detail" })} />
+                <SportEventDetail id="detail" user={this.props.user} card={this.state.currentCard} go={() => this.setState({ activeView: "edit" })} goBack={() => this.setState({ activeView: 'itemList' })} />
             </Root>
         );
     }    

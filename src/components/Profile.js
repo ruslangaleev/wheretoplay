@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Panel, PanelHeader, Group, Root } from '@vkontakte/vkui';
 import firebase from './../Firebase';
-import Edit from './Edit';
 import Item from './Item';
+
+import EditSportEvent from './EditSportEvent';
+import SportEventDetail from './SportEventDetail';
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -24,14 +26,15 @@ export default class Profile extends React.Component {
                 for (let card in cards) {
                     publishCards.push({
                         id: card,
-                        title: cards[card].title,
-                        description: cards[card].description,
+                        kindSport: cards[card].kindSport,
+                        city: cards[card].city,
+                        fullAddress: cards[card].fullAddress,
                         startDateTime: cards[card].startDateTime,
                         endDateTime: cards[card].endDateTime,
-                        price: cards[card].price,
-                        fullAddress: cards[card].fullAddress,
-                        levels: cards[card].levels,
                         limit: cards[card].limit,
+                        description: cards[card].description,
+                        price: cards[card].price,
+                        levels: cards[card].levels,
                         players: cards[card].players,
                         user: cards[card].user,
                         avatar: cards[card].avatar
@@ -42,11 +45,7 @@ export default class Profile extends React.Component {
             });            
         });
 
-        //ref.orderBy('players').orderByChild('id').equalTo(9999999999).on("value", snapshot => {
         ref.on("value", snapshot => {
-            console.log('profile-players');
-            console.log(snapshot.val());
-
             let cards = snapshot.val();
             let subscribeCards = [];
                 for (let card in cards) {
@@ -55,14 +54,15 @@ export default class Profile extends React.Component {
                         if (cards[card].players[player].id == this.props.user.id) {
                             subscribeCards.push({
                                 id: card,
-                                title: cards[card].title,
-                                description: cards[card].description,
+                                kindSport: cards[card].kindSport,
+                                city: cards[card].city,
+                                fullAddress: cards[card].fullAddress,
                                 startDateTime: cards[card].startDateTime,
                                 endDateTime: cards[card].endDateTime,
-                                price: cards[card].price,
-                                fullAddress: cards[card].fullAddress,
-                                levels: cards[card].levels,
                                 limit: cards[card].limit,
+                                description: cards[card].description,
+                                price: cards[card].price,
+                                levels: cards[card].levels,
                                 players: cards[card].players,
                                 user: cards[card].user,
                                 avatar: cards[card].avatar
@@ -86,7 +86,7 @@ export default class Profile extends React.Component {
                         </PanelHeader>                  
                         <Group title="Мои опубликованные">
                             {this.state.publishCards.map((card, index) =>
-                                <Item item={card} go={() => this.setState({ activeView: "detail", currentCard: card })} goBack={() => this.setState({ activeView: "itemList" })} />
+                                <Item item={card} go={() => this.setState({ activeView: "edit", currentCard: card })} goBack={() => this.setState({ activeView: "itemList" })} />
                             )}
                         </Group>
                         <Group title="Мои подписанные">
@@ -96,7 +96,8 @@ export default class Profile extends React.Component {
                         </Group>                        
                     </Panel>
                 </View>
-                <Edit id="edit" card={this.state.currentCard} go={() => this.setState({ activeView: "profile" })} />                
+                <EditSportEvent id="edit" card={this.state.currentCard} go={() => this.setState({ activeView: "profile" })} />                
+                <SportEventDetail id="detail" card={this.state.currentCard} goBack={() => this.setState({ activeView: "profile" })} user={this.props.user} />
             </Root>
         );
     }

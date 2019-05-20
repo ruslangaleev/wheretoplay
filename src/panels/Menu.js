@@ -77,27 +77,6 @@ class Menu extends React.Component {
 				cards: newState
 			});
     })
-    
-    // sportEventRef.orderByChild("userId").equalTo(this.user).on("value", snapshot => {
-    //   let cards = snapshot.val();
-    //   let newState = [];
-		// 	for (let card in cards) {
-		// 		newState.push({
-		// 			id: card,
-		// 			title: cards[card].title,
-    //       description: cards[card].description,
-    //       startDateTime: cards[card].startDateTime,
-    //       endDateTime: cards[card].endDateTime,
-    //       price: cards[card].price,
-    //       fullAddress: cards[card].fullAddress,
-    //       city: cards[card].city,
-    //       kindSport: cards[card].kindSport
-		// 		});
-		// 	}
-		// 	this.setState({
-		// 		myCards: newState
-		// 	});
-    // });
 	}
 
     onStoryChange (e) {
@@ -117,6 +96,7 @@ class Menu extends React.Component {
     }
   
     render () {
+      console.log(this.state.cards);
       return (
         <Root activeView={this.state.activeView}>
           <Epic id="main" activeStory={this.state.activeStory} tabbar={

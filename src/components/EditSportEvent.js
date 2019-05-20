@@ -16,21 +16,23 @@ moment.locale('ru')
 
 const osname = platform();
 
-class Add extends React.Component {
+class EditSportEvent extends React.Component {
     constructor(props) {
       super(props);
   
       this.state = {
-        kindSport: null,
+        id: props.card.id,
+        kindSport: props.card.kindSport,
         city: 'Уфа',
-        fullAddress: '',
-        when: '',
-        whatTime: '',
-        duration: '',
-        limit: 0,
-        levels: [],
-        description: '',
-        avatar: ''
+        fullAddress: props.card.fullAddress,
+        when: moment(props.card.startDateTime).format('YYYY-MM-DD'),
+        whatTime: moment.utc(props.card.startDateTime).format('HH:mm'),
+        duration: moment.utc(moment(props.card.endDateTime).diff(moment(props.card.startDateTime))).format("HH:mm"),
+        limit: props.card.limit,
+        levels: props.card.levels,
+        description: props.card.description,
+        avatar: props.card.avatar,
+        user: props.card.user
       }
 
       this.dateList = [
@@ -67,20 +69,29 @@ class Add extends React.Component {
     }
 
     toggleCheckbox = label => {
-      if (this.selectedCheckboxes.has(label.target.value)) {
-        this.selectedCheckboxes.delete(label.target.value);
-      } else {
-        this.selectedCheckboxes.add(label.target.value);
-      }
+        const levels = this.state.levels
+        let index
+        let value = label.target.value
+
+        if (levels.indexOf(value) === -1)
+        {
+            levels.push(value)
+        } else {
+            index = levels.indexOf(value)
+            levels.splice(index, 1)
+        }
+
+        this.setState({ levels: levels })
     }   
     
     createCheckbox = label => (
-      <Cell selectable
-              label={label}
-              onChange={this.toggleCheckbox}
-              key={label}
-              value={label}
-      >{label}</Cell>
+        <Cell selectable
+            checked={this.state.levels.indexOf(label) > -1}
+            label={label}
+            onChange={this.toggleCheckbox}
+            key={label}
+            value={label}
+        >{label}</Cell>
     )   
     
     createCheckboxes = () => (
@@ -94,18 +105,16 @@ class Add extends React.Component {
     }
 
     onKindSportChange = (e) => {
-      const state = this.state
-      const sport = sports[e.target.value];
-      state[e.target.name] = sport;
-      this.setState(state);
+      this.setState({ kindSport: e.target.value });
     }    
 
     onSubmit = (e) => {
       e.preventDefault();
   
-      const { kindSport, city, fullAddress, when, whatTime, duration, limit, price, description } = this.state;
+      const { id, kindSport, city, fullAddress, when, whatTime, duration, limit, description, user, 
+        avatar, levels } = this.state;
 
-      if (kindSport === '' || city === '' || fullAddress === '' || when === '' || whatTime === '' || this.selectedCheckboxes.size === 0)
+      if (kindSport === '' || city === '' || fullAddress === '' || when === '' || whatTime === '' || levels.length === 0)
       {
         return;
       }
@@ -116,25 +125,18 @@ class Add extends React.Component {
       var momentDuration = moment.duration(duration);
       var date3 = moment.utc(startdate1).add(momentDuration._milliseconds, 'milliseconds').format();
 
-      var newPostKey = firebase
-        .database()
-        .ref()
-        .child("cards")
-        .push().key;
-
       var updates = {};
-      updates["/cards/" + newPostKey] = {
-        kindSport: kindSport.name,
+      updates["/cards/" + id] = {
+        kindSport: kindSport,
         city: city,
         fullAddress: fullAddress,
         startDateTime: startdate1,
         endDateTime: date3,
         limit: limit,
-        levels: Array.from(this.selectedCheckboxes),
+        levels: levels,
         description: description,
-        
-        user: this.props.user,
-        avatar: kindSport.avatars[0]
+        user: user,
+        avatar: sports.filter(t => t.name === kindSport)[0].avatars[0]
       };
 
       firebase
@@ -146,7 +148,7 @@ class Add extends React.Component {
     }    
   
     render() {
-      const { kindSport, fullAddress, when, whatTime, duration } = this.state;  
+      const { kindSport, fullAddress, when, whatTime, duration, limit } = this.state;  
       return (
         <View activePanel={this.props.id}>
           <Panel id={this.props.id} theme="white">
@@ -163,9 +165,10 @@ class Add extends React.Component {
                 status={kindSport ? 'valid' : 'error'}
                 bottom={kindSport ? '' : 'Пожалуйста, укажите вид спорта'}
                 onChange={this.onKindSportChange}
-                name="kindSport">
+                name="kindSport"
+                value={kindSport}>
                 {sports.map((sport, index) =>
-                  <option key={index} value={index}>{sport.name}</option>
+                  <option key={index} value={sport.name}>{sport.name}</option>
                 )}
               </Select>    
 
@@ -182,7 +185,7 @@ class Add extends React.Component {
                 bottom={fullAddress ? '' : 'Пожалуйста, укажите адрес'}
                 name="fullAddress" 
                 onChange={this.onChange} 
-                value={this.state.value} 
+                value={fullAddress} 
               />
 
               <Select 
@@ -191,7 +194,8 @@ class Add extends React.Component {
                 status={when ? 'valid' : 'error'}
                 bottom={when ? '' : 'Пожалуйста, выберите дату'}
                 onChange={this.onChange} 
-                name="when">
+                name="when"
+                value={when}>
                 {this.dateList.map((date, index) =>
                   <option key={index} value={date.value}>{date.display}</option>
                 )}
@@ -203,7 +207,8 @@ class Add extends React.Component {
                 status={whatTime ? 'valid' : 'error'}
                 bottom={whatTime ? '' : 'Пожалуйста, выберите время'}                
                 onChange={this.onChange} 
-                name="whatTime">
+                name="whatTime"
+                value={whatTime}>
                 {times.map((time, index) =>
                   <option key={index} value={time}>{time}</option>
                 )}
@@ -215,7 +220,8 @@ class Add extends React.Component {
                 status={duration ? 'valid' : 'error'}
                 bottom={duration ? '' : 'Пожалуйста, выберите продолжительность'}                
                 onChange={this.onChange} 
-                name="duration">
+                name="duration"
+                value={duration}>
                 {times.map((duration, index) =>
                   <option key={index} value={duration}>{duration}</option>
                 )}
@@ -223,26 +229,27 @@ class Add extends React.Component {
 
               <Select 
                 top="Лимит игроков" 
-                placeholder="Неограничено"             
+                placeholder="Неограничено"              
                 onChange={this.onChange} 
-                name="limit">
-                {limits.map((duration, index) =>
-                  <option key={index} value={duration}>{duration}</option>
+                name="limit"
+                value={limit}>
+                {limits.map((time, index) =>
+                  <option key={index} value={time}>{time}</option>
                 )}
-              </Select>                       
+              </Select>                                           
 
               <Group 
                 title="Уровень" 
                 name="levels" 
                 onChange={this.onChange} 
-                status={this.selectedCheckboxes.size > 0 ? 'valid' : 'error'}
-                bottom={this.selectedCheckboxes.size > 0 ? '' : 'Необходимо указать как минимум 1 уровень'} >
+                status={this.state.levels.length > 0 ? 'valid' : 'error'}
+                bottom={this.state.levels.length > 0 ? '' : 'Необходимо указать как минимум 1 уровень'} >
                 <List>
                   {this.createCheckboxes()}
                 </List>
-              </Group>           
+              </Group>             
 
-              <Textarea top="Комментарий" name="description" onChange={this.onChange} />
+              <Textarea top="Комментарий" name="description" onChange={this.onChange} value={this.state.description} />
 
               <Button size="xl">Опубликовать</Button>
             </FormLayout>
@@ -252,4 +259,4 @@ class Add extends React.Component {
     }
 }
   
-export default Add;
+export default EditSportEvent;
