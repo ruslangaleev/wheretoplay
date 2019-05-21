@@ -57,13 +57,12 @@ class Menu extends React.Component {
 		// firebase
     const sportEventRef = firebase.database().ref().child('cards');
     console.log("Определение с датой");
-    const currentDate = moment.utc().unix();
-    console.log(moment.utc());
-		sportEventRef.orderByChild('startDateTime').startAt("2019-05-20T22:00:00Z").on('value', snapshot => {
+    const currentDate = moment.utc().format()//moment.utc().unix(); "2019-05-20T22:00:00Z"
+    console.log(currentDate);
+		sportEventRef.orderByChild('startDateTime').startAt(currentDate).on('value', snapshot => {
       let cards = snapshot.val();
       let newState = [];
 			for (let card in cards) {
-        console.log(cards[card].startDateTime);
 				newState.push({
 					id: card,
           description: cards[card].description,
